@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack_aws
+    ports:
+      # The standard LocalStack port for all services
+      - "4566:4566"
+    environment:
+      # Specify the services you need: SNS, SES, Lambda, DynamoDB
+      - SERVICES=sns,ses,lambda,dynamodb
+      # Set the default region for LocalStack
+      - DEFAULT_REGION=us-east-1
+      - HOSTNAME_EXTERNAL=localhost
+      - DEBUG=1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./localstack-data:/var/lib/localstack"
+    # Wait for the container to be healthy before starting up
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
