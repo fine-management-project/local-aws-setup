@@ -5,21 +5,29 @@ services:
     image: localstack/localstack:latest
     container_name: localstack_aws
     ports:
-      # The standard LocalStack port for all services
       - "4566:4566"
     environment:
-      # Specify the services you need: SNS, SES, Lambda, DynamoDB
-      - SERVICES=sns,ses,lambda,dynamodb
-      # Set the default region for LocalStack
+      - LOCALSTACK_PERSISTENCE=1
+      - SERVICES=sns,ses,sqs,lambda,dynamodb
       - DEFAULT_REGION=us-east-1
-      - HOSTNAME_EXTERNAL=localhost
+      - HOSTNAME_EXTERNAL=localstack
       - DEBUG=1
     volumes:
+      - "./initialise-resources.sh:/etc/localstack/init/ready.d/initialise-resources.sh"
+      - "./localstack-data:/var/lib/localstack" 
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./localstack-data:/var/lib/localstack"
-    # Wait for the container to be healthy before starting up
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4566/health"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - fine-management-app-network
+    extra_hosts:
+      - "sqs.us-east-1.localhost.localstack.cloud:host-gateway"
+
+
+networks:
+  fine-management-app-network:
+    external: true
+    name: fine-management-app-network
