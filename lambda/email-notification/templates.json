@@ -1,0 +1,37 @@
+{
+  "email-templates": [
+    {
+      "PutRequest": {
+        "Item": {
+          "templateId": { "S": "verification-email" },
+          "subject": { "S": "Fine Management App - Email verification" },
+          "template": {
+            "S": "<html>\n    <h1>Greetings!</h1>\n    <p>Thank you for signing up!</p>\n    <p>Please, follow the link below to verify your account!</p>\n    <p>\n      If you need to resend this email, go to your account page and click on the\n      verify button near your email.\n    </p>\n    <p><a href=\"{verificationLink}\">Verification Link</a></p>\n    <p>Sincerely yours, Fine Management App</p>\n</html>"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "templateId": { "S": "forgot-password" },
+          "subject": { "S": "Fine Management App - Forgot password" },
+          "template": {
+            "S": "<html>\n    <h1>Greetings!</h1>\n      <p>Please, follow the link below to change the password!</p>\n    <p>\nIn case you do not need to change the password, please ignore this email.   </p>\n    <p><a href=\"{forgotPasswordLink}\">Forgot password</a></p>\n    <p>Sincerely yours, Fine Management App</p>\n</html>"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "templateId": { "S": "change-email" },
+          "subject": { "S": "Fine Management App - Change email" },
+          "template": {
+            "S": "<html>\n    <h1>Greetings!</h1>\n      <p>Please, follow the link below to change the email!</p>\n    <p>\nIn case you do not need to change the email, please ignore this email.   </p>\n    <p><a href=\"{changeEmailLink}\">Change email</a></p>\n    <p>Sincerely yours, Fine Management App</p>\n</html>"
+          }
+        }
+      }
+    }
+  ]
+}

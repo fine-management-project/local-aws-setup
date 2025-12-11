@@ -11,11 +11,18 @@ services:
       - SERVICES=sns,ses,sqs,lambda,dynamodb
       - DEFAULT_REGION=us-east-1
       - HOSTNAME_EXTERNAL=localstack
-      - DEBUG=1
+      - DEBUG=0
+      - FORCE_SES_SMTP_CHECK=1
+      - LAMBDA_CONTAINER_TTL=60
+
     volumes:
+      - ./lambda/email-notification/templates.json:/app/init_data/templates.json
+      - ./email-notifications-lambda.zip:/app/init_data/email-notifications-lambda.zip
       - "./initialise-resources.sh:/etc/localstack/init/ready.d/initialise-resources.sh"
       - "./localstack-data:/var/lib/localstack" 
       - "/var/run/docker.sock:/var/run/docker.sock"
+    env_file:
+      - ./.env
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4566/health"]
       interval: 10s
@@ -25,7 +32,6 @@ services:
       - fine-management-app-network
     extra_hosts:
       - "sqs.us-east-1.localhost.localstack.cloud:host-gateway"
-
 
 networks:
   fine-management-app-network:

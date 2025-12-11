@@ -1,0 +1,34 @@
+{
+  "name": "local-aws-setup",
+  "version": "1.0.0",
+  "description": "This repository is created to store config for the local AWS setup for the development purposes. It includes commands from the initialise-resources.sh and the commands that may be used for manual testing in the docker container.",
+  "main": "index.js",
+  "scripts": {
+    "build-email-lambda": "esbuild ./lambda/email-notification/index --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
+    "zip-email-lambda": "zip -j email-notifications-lambda.zip dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fine-management-project/local-aws-setup.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fine-management-project/local-aws-setup/issues"
+  },
+  "homepage": "https://github.com/fine-management-project/local-aws-setup#readme",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.159",
+    "@types/node": "^24.10.2",
+    "esbuild": "^0.27.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.948.0",
+    "@aws-sdk/client-ses": "^3.948.0",
+    "@aws-sdk/lib-dynamodb": "^3.948.0",
+    "aws-lambda": "^1.0.7",
+    "dotenv": "^17.2.3"
+  }
+}
