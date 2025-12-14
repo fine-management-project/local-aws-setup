@@ -14,6 +14,7 @@ export const handler: SQSHandler = async (event, context: Context) => {
   for (const record of event.Records) {
     try {
       const messageBody = JSON.parse(record.body);
+
       const handler = handlers.find((handler) =>
         handler.canProcess(record.messageAttributes)
       );
@@ -22,7 +23,7 @@ export const handler: SQSHandler = async (event, context: Context) => {
         handler.processEvent(messageBody);
       }
     } catch (e) {
-      console.error("Error parsing message body:", record.body, e);
+      console.error("Error processing event:", record.body, e);
     }
   }
 };
