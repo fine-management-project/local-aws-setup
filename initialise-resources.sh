@@ -41,11 +41,17 @@ echo "SNS topics were created successfully! ✅️"
 
 echo "Subscribing SQS queue to SNS topic... ⌛️"
 
-awslocal sns subscribe \
+LAMBDA_USER_MANAGEMENT_SERVICE_TOPIC_SUBSCRIPTION=$(awslocal sns subscribe \
     --topic-arn "$USER_MANAGEMENT_EVENT_SERVICE_EVENTS_TOPIC_ARN" \
     --protocol sqs \
-    --notification-endpoint "$EMAIL_NOTIFICATION_LAMBDA_SQS_QUEUE_ARN"
+    --notification-endpoint "$EMAIL_NOTIFICATION_LAMBDA_SQS_QUEUE_ARN" \
+    --query 'SubscriptionArn' --output text)
 
+awslocal sns set-subscription-attributes \
+    --subscription-arn "$LAMBDA_USER_MANAGEMENT_SERVICE_TOPIC_SUBSCRIPTION" \
+    --attribute-name "RawMessageDelivery" \
+    --attribute-value "true"
+    
 echo "Subscriptions are created successfully! ✅️"
 
 echo "Creating DynamoDB's tables... ⌛️"
