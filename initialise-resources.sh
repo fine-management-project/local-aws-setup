@@ -100,7 +100,7 @@ echo "Creating S3 buckets... ⌛️"
 
 awslocal s3 mb s3://fine-app-documents
 
-awslocal s3api put-bucket-cors --bucket my-test-bucket --cors-configuration '{
+awslocal s3api put-bucket-cors --bucket fine-app-documents --cors-configuration '{
   "CORSRules": [
     {
       "AllowedOrigins": ["*"],
