@@ -199,3 +199,31 @@ awslocal sqs send-message \
 After the command is finished you should see a new JSON file in the /localstack-data/state/ses directory.
 
 Here you can see a template, subject, and all other stuff that will be sent from the AWS via email.
+
+# S3
+
+To store raw and signed fine documents S3 is used.
+
+### Create S3 Bucket (fine-app-documents)
+
+```
+awslocal s3 mb s3://fine-app-documents
+```
+
+### Upload files to S3 bucket
+
+```
+aws --endpoint-url=http://localhost:4566 s3 cp test.txt s3://fine-app-documents/raw/test.txt
+```
+
+### List all uploaded files by prefix
+
+```
+aws --endpoint-url=http://localhost:4566 s3 ls s3://fine-app-documents/raw/
+```
+
+### Download file
+
+```
+aws --endpoint-url=http://localhost:4566 s3 cp s3://fine-app-documents/raw/test.txt ./contract_01.pdf
+```

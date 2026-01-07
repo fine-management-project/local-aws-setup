@@ -96,6 +96,12 @@ awslocal ses verify-email-identity --email-address fine-management-app@gmail.com
 
 echo "SES instances are created successfully! ✅️"
 
+echo "Creating S3 buckets... ⌛️"
+
+awslocal s3 mb s3://fine-app-documents
+
+echo "S3 buckets are created successfully! ✅️"
+
 echo "localstack resources were set up successfully! ✅️"
 
 
