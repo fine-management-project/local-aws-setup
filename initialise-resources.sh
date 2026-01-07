@@ -100,6 +100,16 @@ echo "Creating S3 buckets... ⌛️"
 
 awslocal s3 mb s3://fine-app-documents
 
+awslocal s3api put-bucket-cors --bucket my-test-bucket --cors-configuration '{
+  "CORSRules": [
+    {
+      "AllowedOrigins": ["*"],
+      "AllowedMethods": ["GET", "PUT", "POST", "DELETE"],
+      "AllowedHeaders": ["*"]
+    }
+  ]
+}'
+
 echo "S3 buckets are created successfully! ✅️"
 
 echo "localstack resources were set up successfully! ✅️"
