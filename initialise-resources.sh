@@ -24,6 +24,19 @@ EMAIL_NOTIFICATION_LAMBDA_SQS_QUEUE_ARN=$(awslocal sqs get-queue-attributes \
 
 echo "EMAIL_NOTIFICATION_LAMBDA_SQS_QUEUE_ARN: $EMAIL_NOTIFICATION_LAMBDA_SQS_QUEUE_ARN"
 
+FINE_MANAGEMENT_SERVICE_SQS_QUEUE_URL=$(awslocal sqs create-queue \
+    --queue-name fine-management-service-queue \
+    --output text \
+    --query 'QueueUrl')
+
+FINE_MANAGEMENT_SERVICE_SQS_QUEUE_ARN=$(awslocal sqs get-queue-attributes \
+    --queue-url "$FINE_MANAGEMENT_SERVICE_SQS_QUEUE_URL" \
+    --attribute-names QueueArn \
+    --output text \
+    --query 'Attributes.QueueArn')
+
+echo "FINE_MANAGEMENT_SERVICE_SQS_QUEUE_ARN: $FINE_MANAGEMENT_SERVICE_SQS_QUEUE_ARN"
+
 echo "SQS queues were created successfully! ✅️"
 
 
@@ -35,6 +48,13 @@ USER_MANAGEMENT_EVENT_SERVICE_EVENTS_TOPIC_ARN=$(awslocal sns create-topic \
     --query 'TopicArn')
 
 echo "USER_MANAGEMENT_EVENT_SERVICE_EVENTS_TOPIC_ARN: $USER_MANAGEMENT_EVENT_SERVICE_EVENTS_TOPIC_ARN"
+
+PAYMENT_MANAGEMENT_EVENT_SERVICE_EVENTS_TOPIC_ARN=$(awslocal sns create-topic \
+    --name payment-management-service-events-topic \
+    --output text \
+    --query 'TopicArn')
+
+echo "PAYMENT_MANAGEMENT_EVENT_SERVICE_EVENTS_TOPIC_ARN: $PAYMENT_MANAGEMENT_EVENT_SERVICE_EVENTS_TOPIC_ARN"
 
 
 echo "SNS topics were created successfully! ✅️"
@@ -49,6 +69,17 @@ LAMBDA_USER_MANAGEMENT_SERVICE_TOPIC_SUBSCRIPTION=$(awslocal sns subscribe \
 
 awslocal sns set-subscription-attributes \
     --subscription-arn "$LAMBDA_USER_MANAGEMENT_SERVICE_TOPIC_SUBSCRIPTION" \
+    --attribute-name "RawMessageDelivery" \
+    --attribute-value "true"
+
+FINE_MANAGEMENT_SERVICE_PAYMENT_USER_MANAGEMENT_SERVICE_TOPIC_SUBSCRIPTION=$(awslocal sns subscribe \
+    --topic-arn "$PAYMENT_MANAGEMENT_EVENT_SERVICE_EVENTS_TOPIC_ARN" \
+    --protocol sqs \
+    --notification-endpoint "$FINE_MANAGEMENT_SERVICE_SQS_QUEUE_ARN" \
+    --query 'SubscriptionArn' --output text)
+
+awslocal sns set-subscription-attributes \
+    --subscription-arn "$FINE_MANAGEMENT_SERVICE_PAYMENT_USER_MANAGEMENT_SERVICE_TOPIC_SUBSCRIPTION" \
     --attribute-name "RawMessageDelivery" \
     --attribute-value "true"
     
